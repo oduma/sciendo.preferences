@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "sciendo.preferences.service";
+
+package preferences;
+
+service Preferences
+{
+	rpc GetPreferences(GetPreferencesRequest) returns (GetPreferencesResponse);
+}
+
+message GetPreferencesRequest
+{
+	string ArtistName = 1;
+}
+
+message GetPreferencesResponse
+{
+	repeated string Artists =1;
+}
