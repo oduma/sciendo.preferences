@@ -5,6 +5,11 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sciendo.preferences.service", "sciendo.preferences.service\sciendo.preferences.service.csproj", "{9BBFE310-8BA3-4BD5-97EF-549D9E92C576}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{49417028-1F47-4874-8E1B-A67B50C87437}"
+	ProjectSection(SolutionItems) = preProject
+		db\clementine.db = db\clementine.db
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

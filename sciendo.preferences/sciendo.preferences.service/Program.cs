@@ -1,9 +1,12 @@
+using Microsoft.Data.Sqlite;
 using sciendo.preferences.service.Logic;
 using sciendo.preferences.service.Services;
 using Sciendo.Last.Fm;
 using Sciendo.Web;
+using System.Data;
 
 var apiKey = "6c66a3b570ea6b98abeebe0c1e9323c7";
+var connectionString = "Data Source=C:\\Code\\Sciendo\\Sciendo.Preferences\\sciendo.preferences\\sciendo.preferences\\db\\clementine.db;";
 var builder = WebApplication.CreateBuilder(args);
 
 // Additional configuration is required to successfully run gRPC on macOS.
@@ -25,6 +28,10 @@ builder.Services.AddTransient<IContentProvider<Temperatures>>(s =>
 new ContentProvider<Temperatures>(s.GetRequiredService<ILogger<ContentProvider<Temperatures>>>(), 
 s.GetRequiredService<IUrlProvider>(), 
 s.GetRequiredService<IWebGet<string>>()));
+
+
+builder.Services.AddTransient<IDbConnection>(s => new SqliteConnection(connectionString));
+builder.Services.Add(new ServiceDescriptor(typeof(IRepository), typeof(Repository), ServiceLifetime.Transient));
 
 var app = builder.Build();
 
