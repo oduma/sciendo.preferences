@@ -1,6 +1,7 @@
 using sciendo.preferences.service.Logic;
 using sciendo.preferences.service.Services;
 using Sciendo.Last.Fm;
+using Sciendo.Web;
 
 var apiKey = "6c66a3b570ea6b98abeebe0c1e9323c7";
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,12 @@ builder.Services.Add(new ServiceDescriptor(typeof(ILastFmGetter), typeof(LastFmG
     ServiceLifetime.Transient));
 builder.Services.AddTransient<IUrlProvider>(s=>
 new UrlProvider(s.GetRequiredService<ILogger<UrlProvider>>(),apiKey));
-
+builder.Services.AddTransient<IWebGet<string>>(s=>
+new WebStringGet(s.GetRequiredService<ILogger<WebStringGet>>()));
+builder.Services.AddTransient<IContentProvider<Temperatures>>(s =>
+new ContentProvider<Temperatures>(s.GetRequiredService<ILogger<ContentProvider<Temperatures>>>(), 
+s.GetRequiredService<IUrlProvider>(), 
+s.GetRequiredService<IWebGet<string>>()));
 
 var app = builder.Build();
 

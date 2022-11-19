@@ -5,24 +5,20 @@ namespace sciendo.preferences.service.Logic
     public class LastFmGetter : ILastFmGetter
     {
         private readonly ILogger<ILastFmGetter> logger;
-        private readonly IUrlProvider urlProvider;
+        private readonly IContentProvider<Temperatures> contentProvider;
         private const string methodName = "artist.getsimilar";
         private const string userName = "scentmaster";
         private const string artistParameterName = "artist";
 
-        public LastFmGetter(ILogger<ILastFmGetter> logger, IUrlProvider urlProvider)
+        public LastFmGetter(ILogger<ILastFmGetter> logger, IContentProvider<Temperatures> contentProvider)
         {
             this.logger = logger;
-            this.urlProvider = urlProvider;
+            this.contentProvider = contentProvider;
         }
         public string[] GetSimilarArtists(string artist)
         {
-            var result= new List<string>();
-            for (int i = 1; i < 10; i++)
-                result.Add(
-                    urlProvider.GetUrl(methodName, userName, i, artistParameterName + "=" + artist)
-                    .ToString());
-            return result.ToArray(); 
+            var temperatures = contentProvider.GetContent(methodName, userName, 1, artistParameterName + "=" + artist);
+            return temperatures.SimilarArtists.Artist.Select(a => a.Name).ToArray();
         }
     }
 }
