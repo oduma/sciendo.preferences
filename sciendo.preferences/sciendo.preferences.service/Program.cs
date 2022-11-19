@@ -1,3 +1,4 @@
+using sciendo.preferences.service.Logic;
 using sciendo.preferences.service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
+builder.Services.AddLogging();
+builder.Services.Add(new ServiceDescriptor(typeof(IFilterLocally), typeof(FilterLocally),
+    ServiceLifetime.Transient));
+builder.Services.Add(new ServiceDescriptor(typeof(ILastFmGetter), typeof(LastFmGetter), 
+    ServiceLifetime.Transient));
 
 var app = builder.Build();
 
