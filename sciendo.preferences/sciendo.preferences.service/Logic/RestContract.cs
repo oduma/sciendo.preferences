@@ -10,12 +10,8 @@ namespace sciendo.preferences.service.Logic
 {
     using System;
 
-    using System.Globalization;
     using System.Text.Json;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-    using JsonConverter = Newtonsoft.Json.JsonConverter;
-    using JsonConverterAttribute = Newtonsoft.Json.JsonConverterAttribute;
 
     public partial class Temperatures
     {

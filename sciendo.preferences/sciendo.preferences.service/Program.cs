@@ -1,6 +1,8 @@
 using sciendo.preferences.service.Logic;
 using sciendo.preferences.service.Services;
+using Sciendo.Last.Fm;
 
+var apiKey = "6c66a3b570ea6b98abeebe0c1e9323c7";
 var builder = WebApplication.CreateBuilder(args);
 
 // Additional configuration is required to successfully run gRPC on macOS.
@@ -14,6 +16,9 @@ builder.Services.Add(new ServiceDescriptor(typeof(IFilterLocally), typeof(Filter
     ServiceLifetime.Transient));
 builder.Services.Add(new ServiceDescriptor(typeof(ILastFmGetter), typeof(LastFmGetter), 
     ServiceLifetime.Transient));
+builder.Services.AddTransient<IUrlProvider>(s=>
+new UrlProvider(s.GetRequiredService<ILogger<UrlProvider>>(),apiKey));
+
 
 var app = builder.Build();
 

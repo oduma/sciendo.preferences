@@ -4,7 +4,7 @@
     {
         public string[] GetFiltered(string[] artists)
         {
-            return new string[] { "feg", "ghi", "hjk" };
+            return artists;
 
         }
     }
