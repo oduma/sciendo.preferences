@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using sciendo.preferences.service.Infrastructure;
 using sciendo.preferences.service.Logic;
 using sciendo.preferences.service.Services;
 using Sciendo.Last.Fm;
@@ -15,6 +16,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
+builder.Services.AddCors(o => o.AddPolicy("AllowLocalhost", b =>
+{
+    b.WithOrigins("https://localhost:4200")
+    .WithHeaders("Grpc-Status",
+        "Grpc-Message",
+        "Grpc-Encoding",
+        "Grpc-Accept-Encoding",
+        "X-Grpc-Web",
+        "User-Agent",
+        "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Methods");
+    //SetIsOriginAllowed(Helper.AllowMyClient)
+    //.AllowAnyOrigin()
+    //.AllowAnyMethod()
+    //.AllowAnyHeader()
+    //.WithExposedHeaders(
+    //    "Grpc-Status",
+    //    "Grpc-Message",
+    //    "Grpc-Encoding",
+    //    "Grpc-Accept-Encoding",
+    //    "X-Grpc-Web",
+    //    "User-Agent");
+}));
 builder.Services.AddLogging();
 builder.Services.Add(new ServiceDescriptor(typeof(IFilterLocally), typeof(FilterLocally),
     ServiceLifetime.Transient));
@@ -33,6 +57,7 @@ s.GetRequiredService<IWebGet<string>>()));
 builder.Services.AddTransient<IDbConnection>(s => new SqliteConnection(connectionString));
 builder.Services.Add(new ServiceDescriptor(typeof(IRepository), typeof(Repository), ServiceLifetime.Transient));
 
+
 var app = builder.Build();
 
 IWebHostEnvironment env = app.Environment;
@@ -42,8 +67,18 @@ if(env.IsDevelopment())
     app.MapGrpcReflectionService();
 }
 
+app.UseRouting();
+app.UseGrpcWeb();
+app.UseCors();
+
+app.UseEndpoints(
+    e => e.MapGrpcService<PreferencesService>()
+    .EnableGrpcWeb()
+    .RequireCors("AllowLocalhost")
+
+    );
 // Configure the HTTP request pipeline.
-app.MapGrpcService<PreferencesService>();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+//app.MapGrpcService<PreferencesService>();
+//app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 
 app.Run();

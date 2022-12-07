@@ -18,7 +18,9 @@ namespace sciendo.preferences.service.Logic
         public string[] GetSimilarArtists(string artist)
         {
             var temperatures = contentProvider.GetContent(methodName, userName, 1, artistParameterName + "=" + artist);
-            return temperatures.SimilarArtists.Artist.Select(a => a.Name).ToArray();
+            if(temperatures.SimilarArtists!=null && temperatures.SimilarArtists.Artist.Any())
+                return temperatures.SimilarArtists.Artist.Select(a => a.Name).ToArray();
+            return new string[] {};
         }
     }
 }
